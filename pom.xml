@@ -35,24 +35,8 @@
     </properties>
 
     <modules>
-        <module>arangodb</module>
-        <module>arangodb-graph</module>
-        <module>cassandra</module>
-        <module>scylla</module>
-        <module>couchbase</module>
-        <module>elasticsearch</module>
         <module>janus-graph</module>
         <module>neo4j</module>
-        <module>hazelcast</module>
-        <module>memcached</module>
-        <module>mongodb</module>
-        <module>mongodb-lite</module>
-        <module>mongodb-double</module>
-        <module>mongodb-record</module>
-        <module>oracle-nosql</module>
-        <module>redis</module>
-        <module>couchdb</module>
-        <module>bean-validation</module>
     </modules>
 
     <dependencies>
