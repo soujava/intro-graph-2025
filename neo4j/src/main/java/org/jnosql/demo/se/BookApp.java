@@ -24,31 +24,25 @@ public final class BookApp {
 
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
             GraphTemplate graph = container.select(GraphTemplate.class).get();
+            BookService service = container.select(BookService.class).get();
 
-            graph.insert(Category.of("Software"));
-            graph.insert(Category.of("Romance"));
-
-            graph.insert(Category.of("Java"));
-            graph.insert(Category.of("NoSQL"));
-            graph.insert(Category.of("Micro Service"));
-
-            graph.insert(Book.of("Effective Java"));
-            graph.insert(Book.of("NoSQL Distilled"));
-            graph.insert(Book.of("Migrating to Microservice Databases"));
-            graph.insert(Book.of("The Shack"));
+            service.save(Book.of("Effective Java"));
+            service.save(Book.of("NoSQL Distilled"));
+            service.save(Book.of("Migrating to Microservice Databases"));
+            service.save(Book.of("The Shack"));
 
 
-            Category software = getCategory("Software", graph);
-            Category romance = getCategory("Romance", graph);
+            Category software = service.save(Category.of("Software"));
+            Category romance = service.save(Category.of("Romance"));
 
-            Category java = getCategory("Java", graph);
-            Category nosql = getCategory("NoSQL", graph);
-            Category microService = getCategory("Micro Service", graph);
+            Category java = service.save(Category.of("Java"));
+            Category nosql = service.save(Category.of("NoSQL"));;
+            Category microService = service.save(Category.of("Micro Service"));
 
-            Book effectiveJava = getBook("Effective Java", graph);
-            Book nosqlDistilled = getBook("NoSQL Distilled", graph);
-            Book migratingMicroservice = getBook("Migrating to Microservice Databases", graph);
-            Book shack = getBook("The Shack", graph);
+            Book effectiveJava = service.save(Book.of("Effective Java"));
+            Book nosqlDistilled = service.save(Book.of("NoSQL Distilled"));
+            Book migratingMicroservice = service.save(Book.of("Migrating to Microservice Databases"));
+            Book shack = service.save(Book.of("The Shack"));
 
 
 
@@ -70,13 +64,4 @@ public final class BookApp {
         }
     }
 
-    private static Category getCategory(String name, GraphTemplate template) {
-        return template.select(Category.class).where("name").eq(name).<Category>singleResult()
-                .orElseThrow(() -> new IllegalStateException("Entity does not find"));
-    }
-
-    private static Book getBook(String name, GraphTemplate template) {
-        return template.select(Book.class).where("name").eq(name).<Book>singleResult()
-                .orElseThrow(() -> new IllegalStateException("Entity does not find"));
-    }
 }
