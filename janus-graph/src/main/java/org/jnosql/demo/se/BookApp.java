@@ -25,6 +25,7 @@ public final class BookApp {
 
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
             TinkerpopTemplate graph = container.select(TinkerpopTemplate.class).get();
+            BookService service = container.select(BookService.class).get();
 
             Category software = graph.insert(Category.of("Software"));
             Category romance = graph.insert(Category.of("Romance"));
