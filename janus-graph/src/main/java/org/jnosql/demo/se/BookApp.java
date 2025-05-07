@@ -27,17 +27,17 @@ public final class BookApp {
             TinkerpopTemplate graph = container.select(TinkerpopTemplate.class).get();
             BookService service = container.select(BookService.class).get();
 
-            Category software = graph.insert(Category.of("Software"));
-            Category romance = graph.insert(Category.of("Romance"));
+            Category software = service.save(Category.of("Software"));
+            Category romance = service.save(Category.of("Romance"));
 
-            Category java = graph.insert(Category.of("Java"));
-            Category nosql = graph.insert(Category.of("NoSQL"));
-            Category microService = graph.insert(Category.of("Micro Service"));
+            Category java = service.save(Category.of("Java"));
+            Category nosql = service.save(Category.of("NoSQL"));
+            Category microService = service.save(Category.of("Micro Service"));
 
-            Book effectiveJava = graph.insert(Book.of("Effective Java"));
-            Book nosqlDistilled = graph.insert(Book.of("NoSQL Distilled"));
-            Book migratingMicroservice = graph.insert(Book.of("Migrating to Microservice Databases"));
-            Book shack = graph.insert(Book.of("The Shack"));
+            Book effectiveJava = service.save(Book.of("Effective Java"));
+            Book nosqlDistilled = service.save(Book.of("NoSQL Distilled"));
+            Book migratingMicroservice = service.save(Book.of("Migrating to Microservice Databases"));
+            Book shack = service.save(Book.of("The Shack"));
 
 
             graph.edge(java, "is", software);

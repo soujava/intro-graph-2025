@@ -16,4 +16,9 @@ public class BookService {
         Optional<Book> foundBook = template.select(Book.class).where("name").eq(book.getName()).<Book>singleResult();
         return foundBook.orElseGet(() -> template.insert(book));
     }
+
+    public Category save(Category category) {
+        Optional<Category> foundCategory = template.select(Category.class).where("name").eq(category.getName()).<Category>singleResult();
+        return foundCategory.orElseGet(() -> template.insert(category));
+    }
 }
