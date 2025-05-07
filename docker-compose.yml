@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  cassandra:
+    image: cassandra:3.11
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+
+  janusgraph:
+    image: janusgraph/janusgraph:latest
+    container_name: janusgraph
+    depends_on:
+      - cassandra
+      - elasticsearch
+    ports:
+      - "8182:8182" # Gremlin Server
+    environment:
+      - gremlin.graph=org.janusgraph.core.ConfiguredGraphFactory
+      - storage.backend=cassandra
+      - storage.hostname=cassandra
+      - index.search.backend=elasticsearch
+      - index.search.hostname=elasticsearch
+
+  graph-explorer:
+    image: prabushitha/graph-explorer:latest
+    container_name: graph-explorer
+    ports:
+      - "8080:8080"
+    environment:
+      - GREMLIN_HOST=janusgraph
+
+  neo4j:
+    image: neo4j:5.26.3
+    container_name: neo4j
+    ports:
+      - "7474:7474" # HTTP
+      - "7687:7687" # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/admin123
