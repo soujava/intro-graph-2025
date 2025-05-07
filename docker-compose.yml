@@ -15,6 +15,7 @@ services:
       - xpack.security.enabled=false
     ports:
       - "9200:9200"
+    mem_limit: 2g
 
   janusgraph:
     image: janusgraph/janusgraph:latest
@@ -23,27 +24,18 @@ services:
       - cassandra
       - elasticsearch
     ports:
-      - "8182:8182" # Gremlin Server
+      - "8182:8182"
     environment:
       - gremlin.graph=org.janusgraph.core.ConfiguredGraphFactory
-      - storage.backend=cassandra
+      - storage.backend=cql
       - storage.hostname=cassandra
       - index.search.backend=elasticsearch
       - index.search.hostname=elasticsearch
 
-  graph-explorer:
-    image: prabushitha/graph-explorer:latest
-    container_name: graph-explorer
+  gremlin-visualiser:
+    image: prabushitha/gremlin-visualiser
+    container_name: gremlin-visualiser
     ports:
-      - "8080:8080"
+      - "3000:3000"
     environment:
-      - GREMLIN_HOST=janusgraph
-
-  neo4j:
-    image: neo4j:5.26.3
-    container_name: neo4j
-    ports:
-      - "7474:7474" # HTTP
-      - "7687:7687" # Bolt
-    environment:
-      - NEO4J_AUTH=neo4j/admin123
+      - GREMLIN_SERVER_URL=ws://janusgraph:8182/gremlin
