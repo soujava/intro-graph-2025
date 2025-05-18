@@ -26,40 +26,26 @@ public final class BookApp {
             GraphTemplate graph = container.select(GraphTemplate.class).get();
             BookService service = container.select(BookService.class).get();
 
-            service.save(Book.of("Effective Java"));
-            service.save(Book.of("NoSQL Distilled"));
-            service.save(Book.of("Migrating to Microservice Databases"));
-            service.save(Book.of("The Shack"));
-
-
             Category software = service.save(Category.of("Software"));
-            Category romance = service.save(Category.of("Romance"));
-
             Category java = service.save(Category.of("Java"));
-            Category nosql = service.save(Category.of("NoSQL"));;
-            Category microService = service.save(Category.of("Micro Service"));
+            Category architecture = service.save(Category.of("Architecture"));
+            Category performance = service.save(Category.of("Performance"));
 
             Book effectiveJava = service.save(Book.of("Effective Java"));
-            Book nosqlDistilled = service.save(Book.of("NoSQL Distilled"));
-            Book migratingMicroservice = service.save(Book.of("Migrating to Microservice Databases"));
-            Book shack = service.save(Book.of("The Shack"));
+            Book cleanArchitecture = service.save(Book.of("Clean Architecture"));
+            Book systemDesign = service.save(Book.of("System Design Interview"));
+            Book javaPerformance = service.save(Book.of("Java Performance"));
 
 
+            graph.edge(Edge.source(effectiveJava).label("is").target(java).property("relevance", 10).build());
+            graph.edge(Edge.source(effectiveJava).label("is").target(software).property("relevance", 9).build());
+            graph.edge(Edge.source(cleanArchitecture).label("is").target(software).property("relevance", 8).build());
+            graph.edge(Edge.source(cleanArchitecture).label("is").target(architecture).property("relevance", 10).build());
+            graph.edge(Edge.source(systemDesign).label("is").target(architecture).property("relevance", 9).build());
+            graph.edge(Edge.source(systemDesign).label("is").target(software).property("relevance", 7).build());
+            graph.edge(Edge.source(javaPerformance).label("is").target(performance).property("relevance", 8).build());
+            graph.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
 
-            graph.edge(Edge.source(java).label("is").target(software).build());
-            graph.edge(Edge.source(nosql).label("is").target(software).build());
-            graph.edge(Edge.source(microService).label("is").target(software).build());
-
-            graph.edge(Edge.source(effectiveJava).label("is").target(software).build());
-            graph.edge(Edge.source(nosqlDistilled).label("is").target(software).build());
-            graph.edge(Edge.source(migratingMicroservice).label("is").target(software).build());
-
-            graph.edge(Edge.source(effectiveJava).label("is").target(java).build());
-            graph.edge(Edge.source(nosqlDistilled).label("is").target(nosql).build());
-            graph.edge(Edge.source(migratingMicroservice).label("is").target(microService).build());
-
-
-            graph.edge(Edge.source(shack).label("is").target(romance).build());
 
         }
     }
