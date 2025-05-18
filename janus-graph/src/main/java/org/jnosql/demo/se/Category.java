@@ -62,7 +62,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Traveler{" + "id=" + id +
+        return "Category{" + "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

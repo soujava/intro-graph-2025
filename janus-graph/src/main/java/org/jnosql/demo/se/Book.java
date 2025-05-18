@@ -62,7 +62,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Traveler{" + "id=" + id +
+        return "Book{" + "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

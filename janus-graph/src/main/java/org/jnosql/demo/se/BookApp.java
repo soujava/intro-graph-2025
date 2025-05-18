@@ -77,7 +77,7 @@ public final class BookApp {
             System.out.println("\n📚 Books in 'Architecture' category:");
             var architectureBooks = graph.gremlin(
                     "g.V().hasLabel('Category').has('name','Architecture')"
-                            + ".in('is').values('title')"
+                            + ".in('is')"
             ).toList();
             architectureBooks.forEach(doc -> System.out.println(" - " + doc));
 
