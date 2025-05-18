@@ -75,26 +75,13 @@ public final class BookApp {
 
 
             System.out.println("\n📚 Books in 'Architecture' category:");
-            var architectureBooks = graph.gremlin(
-                    "g.V().hasLabel('Category').has('name','Architecture')"
-                            + ".in('is')"
-            ).toList();
+            var architectureBooks = graph.gremlin("g.V().hasLabel('Category').has('name','Architecture').in('is')").toList();
             architectureBooks.forEach(doc -> System.out.println(" - " + doc));
 
             System.out.println("\n🔍 Categories with more than one book:");
-            var commonCategories = graph.gremlin(
-                    "g.V().hasLabel('Category').as('cat')"
-                            + ".in('is').count().is(gt(1)).select('cat').values('name')"
+            var commonCategories = graph.gremlin("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))"
             ).toList();
             commonCategories.forEach(doc -> System.out.println(" - " + doc));
-
-            System.out.println("\n📘 Books and their categories (with edge metadata):");
-            var allPairs = graph.gremlin(
-                    "g.V().hasLabel('Book').as('b')"
-                            + ".outE('is').as('e').inV().as('c')"
-                            + ".select('b','c','e').by(valueMap()).by(valueMap()).by(valueMap())"
-            ).toList();
-            allPairs.forEach(System.out::println);
         }
     }
 }
