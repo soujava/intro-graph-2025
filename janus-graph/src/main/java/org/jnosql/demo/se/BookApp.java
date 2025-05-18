@@ -82,6 +82,12 @@ public final class BookApp {
             var commonCategories = graph.gremlin("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))"
             ).toList();
             commonCategories.forEach(doc -> System.out.println(" - " + doc));
+
+            var highRelevanceBooks = graph.gremlin( "g.E().hasLabel('is').has('relevance', gte(9))" +
+                    ".outV().hasLabel('Book').dedup()").toList();
+
+            System.out.println("\n📚 Books with high relevance:");
+            highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
         }
     }
 }
