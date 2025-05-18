@@ -12,6 +12,7 @@ package org.jnosql.demo.se;
 
 import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
+import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JTemplate;
 import org.eclipse.jnosql.mapping.graph.Edge;
 import org.eclipse.jnosql.mapping.graph.GraphTemplate;
 
@@ -23,7 +24,7 @@ public final class BookApp {
     public static void main(String[] args) {
 
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
-            GraphTemplate graph = container.select(GraphTemplate.class).get();
+            Neo4JTemplate graph = container.select(Neo4JTemplate.class).get();
             BookService service = container.select(BookService.class).get();
 
             Category software = service.save(Category.of("Software"));
@@ -45,6 +46,8 @@ public final class BookApp {
             graph.edge(Edge.source(systemDesign).label("is").target(software).property("relevance", 7).build());
             graph.edge(Edge.source(javaPerformance).label("is").target(performance).property("relevance", 8).build());
             graph.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
+
+
 
 
         }
