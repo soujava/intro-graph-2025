@@ -16,6 +16,8 @@ import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JTemplate;
 import org.eclipse.jnosql.mapping.graph.Edge;
 import org.eclipse.jnosql.mapping.graph.GraphTemplate;
 
+import java.util.Collections;
+
 public final class BookApp {
 
     private BookApp() {
@@ -48,6 +50,20 @@ public final class BookApp {
             graph.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
 
 
+            System.out.println("\n📚 Books in 'Architecture' category:");
+            var architectureBooks = graph.cypher("g.V().hasLabel('Category').has('name','Architecture').in('is')", Collections.emptyMap()).toList();
+            architectureBooks.forEach(doc -> System.out.println(" - " + doc));
+
+            System.out.println("\n🔍 Categories with more than one book:");
+            var commonCategories = graph.cypher("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))"
+                    , Collections.emptyMap()).toList();
+            commonCategories.forEach(doc -> System.out.println(" - " + doc));
+
+            var highRelevanceBooks = graph.cypher( "g.E().hasLabel('is').has('relevance', gte(9))" +
+                    ".outV().hasLabel('Book').dedup()", Collections.emptyMap()).toList();
+
+            System.out.println("\n📚 Books with high relevance:");
+            highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
 
 
         }
