@@ -17,9 +17,9 @@ import org.eclipse.jnosql.mapping.graph.Edge;
 
 import java.util.List;
 
-public final class BookApp {
+public final class BookApp2 {
 
-    private BookApp() {
+    private BookApp2() {
     }
 
     public static void main(String[] args) {
@@ -27,7 +27,8 @@ public final class BookApp {
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
             TinkerpopTemplate graph = container.select(TinkerpopTemplate.class).get();
             BookService service = container.select(BookService.class).get();
-
+            BookRepository repository = container.select(BookRepository.class).get();
+            repository.findByName("Effective Java");
             Category software = service.save(Category.of("Software"));
             Category java = service.save(Category.of("Java"));
             Category architecture = service.save(Category.of("Architecture"));

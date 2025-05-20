@@ -7,7 +7,7 @@ import jakarta.data.repository.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BookRepository extends BasicRepository<Book, Long> {
+public interface CategoryRepository extends BasicRepository<Category, Long> {
 
-    Optional<Book> findByName(String name);
+    Optional<Category> findByName(String name);
 }
