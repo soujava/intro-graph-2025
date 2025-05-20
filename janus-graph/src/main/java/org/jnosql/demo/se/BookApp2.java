@@ -27,17 +27,19 @@ public final class BookApp2 {
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
             TinkerpopTemplate graph = container.select(TinkerpopTemplate.class).get();
             BookService service = container.select(BookService.class).get();
-            BookRepository repository = container.select(BookRepository.class).get();
+            var bookRepository = container.select(BookRepository.class).get();
+            var repository = container.select(CategoryRepository.class).get();
             repository.findByName("Effective Java");
-            Category software = service.save(Category.of("Software"));
-            Category java = service.save(Category.of("Java"));
-            Category architecture = service.save(Category.of("Architecture"));
-            Category performance = service.save(Category.of("Performance"));
 
-            Book effectiveJava = service.save(Book.of("Effective Java"));
-            Book cleanArchitecture = service.save(Book.of("Clean Architecture"));
-            Book systemDesign = service.save(Book.of("System Design Interview"));
-            Book javaPerformance = service.save(Book.of("Java Performance"));
+            var software = repository.findByName("Software").orElseGet(() -> repository.save(Category.of("Software")));
+            var java = repository.findByName("Java").orElseGet(() -> repository.save(Category.of("Java")));
+            var architecture = repository.findByName("Architecture").orElseGet(() -> repository.save(Category.of("Architecture")));
+            var performance = repository.findByName("Performance").orElseGet(() -> repository.save(Category.of("Performance")));
+
+            var effectiveJava = bookRepository.findByName("Effective Java").orElseGet(() -> bookRepository.save(Book.of("Effective Java")));
+            var cleanArchitecture = bookRepository.findByName("Clean Architecture").orElseGet(() -> bookRepository.save(Book.of("Clean Architecture")));
+            var systemDesign = bookRepository.findByName("System Design Interview").orElseGet(() -> bookRepository.save(Book.of("System Design Interview")));
+            var javaPerformance = bookRepository.findByName("Java Performance").orElseGet(() -> bookRepository.save(Book.of("Java Performance")));
 
 
             graph.edge(Edge.source(effectiveJava).label("is").target(java).property("relevance", 10).build());
@@ -48,31 +50,6 @@ public final class BookApp2 {
             graph.edge(Edge.source(systemDesign).label("is").target(software).property("relevance", 7).build());
             graph.edge(Edge.source(javaPerformance).label("is").target(performance).property("relevance", 8).build());
             graph.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
-
-
-            List<String> softwareCategories = graph.traversalVertex().hasLabel("Category")
-                    .has("name", "Software")
-                    .in("is").hasLabel("Category").<Category>result()
-                    .map(Category::getName)
-                    .toList();
-
-            List<String> softwareBooks = graph.traversalVertex().hasLabel("Category")
-                    .has("name", "Software")
-                    .in("is").hasLabel("Book").<Book>result()
-                    .map(Book::getName)
-                    .toList();
-
-            List<String> sofwareNoSQLBooks = graph.traversalVertex().hasLabel("Category")
-                    .has("name", "Software")
-                    .in("is")
-                    .has("name", "NoSQL")
-                    .in("is").<Book>result()
-                    .map(Book::getName)
-                    .toList();
-
-            System.out.println("The software categories: " + softwareCategories);
-            System.out.println("The software books: " + softwareBooks);
-            System.out.println("The software and NoSQL books: " + sofwareNoSQLBooks);
 
 
             System.out.println("\n📚 Books in 'Architecture' category:");
