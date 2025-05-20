@@ -51,16 +51,20 @@ public final class BookApp {
 
 
             System.out.println("\n📚 Books in 'Architecture' category:");
-            var architectureBooks = graph.cypher("g.V().hasLabel('Category').has('name','Architecture').in('is')", Collections.emptyMap()).toList();
+            var architectureBooks = graph.cypher(  "MATCH (b:Book)-[:is]->(c:Category {name: 'Architecture'}) RETURN b AS book", Collections.emptyMap()).toList();
             architectureBooks.forEach(doc -> System.out.println(" - " + doc));
 
             System.out.println("\n🔍 Categories with more than one book:");
-            var commonCategories = graph.cypher("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))"
+            var commonCategories = graph.cypher( "MATCH (b:Book)-[:is]->(c:Category) " +
+                            "WITH c, count(b) AS total " +
+                            "WHERE total > 1 " +
+                            "RETURN c"
                     , Collections.emptyMap()).toList();
             commonCategories.forEach(doc -> System.out.println(" - " + doc));
 
-            var highRelevanceBooks = graph.cypher( "g.E().hasLabel('is').has('relevance', gte(9))" +
-                    ".outV().hasLabel('Book').dedup()", Collections.emptyMap()).toList();
+            var highRelevanceBooks = graph.cypher(   "MATCH (b:Book)-[r:is]->(:Category) " +
+                    "WHERE r.relevance >= 9 " +
+                    "RETURN DISTINCT b", Collections.emptyMap()).toList();
 
             System.out.println("\n📚 Books with high relevance:");
             highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
