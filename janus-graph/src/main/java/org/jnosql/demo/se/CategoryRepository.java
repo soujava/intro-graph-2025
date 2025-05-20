@@ -1,15 +1,15 @@
 package org.jnosql.demo.se;
 
 
-import jakarta.data.repository.BasicRepository;
 import jakarta.data.repository.Repository;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.Gremlin;
+import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerPopRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CategoryRepository extends BasicRepository<Category, Long> {
+public interface CategoryRepository extends TinkerPopRepository<Category, Long> {
 
     Optional<Category> findByName(String name);
 
