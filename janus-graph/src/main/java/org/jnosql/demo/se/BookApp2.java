@@ -26,10 +26,8 @@ public final class BookApp2 {
 
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
             TinkerpopTemplate graph = container.select(TinkerpopTemplate.class).get();
-            BookService service = container.select(BookService.class).get();
             var bookRepository = container.select(BookRepository.class).get();
             var repository = container.select(CategoryRepository.class).get();
-            repository.findByName("Effective Java");
 
             var software = repository.findByName("Software").orElseGet(() -> repository.save(Category.of("Software")));
             var java = repository.findByName("Java").orElseGet(() -> repository.save(Category.of("Java")));
@@ -53,16 +51,14 @@ public final class BookApp2 {
 
 
             System.out.println("\n📚 Books in 'Architecture' category:");
-            var architectureBooks = graph.gremlin("g.V().hasLabel('Category').has('name','Architecture').in('is')").toList();
+            var architectureBooks = bookRepository.findArchitectureBooks();
             architectureBooks.forEach(doc -> System.out.println(" - " + doc));
 
             System.out.println("\n🔍 Categories with more than one book:");
-            var commonCategories = graph.gremlin("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))"
-            ).toList();
+            var commonCategories = repository.commonCategories();
             commonCategories.forEach(doc -> System.out.println(" - " + doc));
 
-            var highRelevanceBooks = graph.gremlin( "g.E().hasLabel('is').has('relevance', gte(9))" +
-                    ".outV().hasLabel('Book').dedup()").toList();
+            var highRelevanceBooks = bookRepository.highRelevanceBooks();
 
             System.out.println("\n📚 Books with high relevance:");
             highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
