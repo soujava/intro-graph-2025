@@ -1,6 +1,7 @@
 package org.jnosql.demo.se;
 
 
+import jakarta.data.repository.Param;
 import jakarta.data.repository.Repository;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.Gremlin;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerPopRepository;
@@ -19,4 +20,7 @@ public interface BookRepository extends TinkerPopRepository<Book, Long> {
     @Gremlin("\"g.E().hasLabel('is').has('relevance', gte(9))\" +\n" +
             "                    \".outV().hasLabel('Book').dedup()\"")
     List<Book> highRelevanceBooks();
+
+    @Gremlin("g.V().hasLabel('Book').has('name', @name)")
+    Optional<Book> queryByName(@Param("name") String name);
 }
