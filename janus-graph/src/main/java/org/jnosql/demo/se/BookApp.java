@@ -15,6 +15,7 @@ import jakarta.enterprise.inject.se.SeContainerInitializer;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
 import org.eclipse.jnosql.mapping.graph.Edge;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class BookApp {
@@ -88,6 +89,10 @@ public final class BookApp {
 
             System.out.println("\n📚 Books with high relevance:");
             highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
+
+            System.out.println("\n📚 Books with name: 'Effective Java':");
+            var effectiveJavaBooks = graph.gremlin("g.V().hasLabel('Book').has('name', @name)", Collections.singletonMap("name", "Effective Java")).toList();
+            effectiveJavaBooks.forEach(doc -> System.out.println(" - " + doc));
         }
     }
 }
