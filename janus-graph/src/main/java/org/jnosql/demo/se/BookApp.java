@@ -26,43 +26,43 @@ public final class BookApp {
     public static void main(String[] args) {
 
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
-            TinkerpopTemplate graph = container.select(TinkerpopTemplate.class).get();
-            BookService service = container.select(BookService.class).get();
+            var template = container.select(TinkerpopTemplate.class).get();
+            var service = container.select(BookService.class).get();
 
-            Category software = service.save(Category.of("Software"));
-            Category java = service.save(Category.of("Java"));
-            Category architecture = service.save(Category.of("Architecture"));
-            Category performance = service.save(Category.of("Performance"));
+            var software = service.save(Category.of("Software"));
+            var java = service.save(Category.of("Java"));
+            var architecture = service.save(Category.of("Architecture"));
+            var performance = service.save(Category.of("Performance"));
 
-            Book effectiveJava = service.save(Book.of("Effective Java"));
-            Book cleanArchitecture = service.save(Book.of("Clean Architecture"));
-            Book systemDesign = service.save(Book.of("System Design Interview"));
-            Book javaPerformance = service.save(Book.of("Java Performance"));
-
-
-            graph.edge(Edge.source(effectiveJava).label("is").target(java).property("relevance", 10).build());
-            graph.edge(Edge.source(effectiveJava).label("is").target(software).property("relevance", 9).build());
-            graph.edge(Edge.source(cleanArchitecture).label("is").target(software).property("relevance", 8).build());
-            graph.edge(Edge.source(cleanArchitecture).label("is").target(architecture).property("relevance", 10).build());
-            graph.edge(Edge.source(systemDesign).label("is").target(architecture).property("relevance", 9).build());
-            graph.edge(Edge.source(systemDesign).label("is").target(software).property("relevance", 7).build());
-            graph.edge(Edge.source(javaPerformance).label("is").target(performance).property("relevance", 8).build());
-            graph.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
+            var effectiveJava = service.save(Book.of("Effective Java"));
+            var cleanArchitecture = service.save(Book.of("Clean Architecture"));
+            var systemDesign = service.save(Book.of("System Design Interview"));
+            var javaPerformance = service.save(Book.of("Java Performance"));
 
 
-            List<String> softwareCategories = graph.traversalVertex().hasLabel("Category")
+            template.edge(Edge.source(effectiveJava).label("is").target(java).property("relevance", 10).build());
+            template.edge(Edge.source(effectiveJava).label("is").target(software).property("relevance", 9).build());
+            template.edge(Edge.source(cleanArchitecture).label("is").target(software).property("relevance", 8).build());
+            template.edge(Edge.source(cleanArchitecture).label("is").target(architecture).property("relevance", 10).build());
+            template.edge(Edge.source(systemDesign).label("is").target(architecture).property("relevance", 9).build());
+            template.edge(Edge.source(systemDesign).label("is").target(software).property("relevance", 7).build());
+            template.edge(Edge.source(javaPerformance).label("is").target(performance).property("relevance", 8).build());
+            template.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
+
+
+            List<String> softwareCategories = template.traversalVertex().hasLabel("Category")
                     .has("name", "Software")
                     .in("is").hasLabel("Category").<Category>result()
                     .map(Category::getName)
                     .toList();
 
-            List<String> softwareBooks = graph.traversalVertex().hasLabel("Category")
+            List<String> softwareBooks = template.traversalVertex().hasLabel("Category")
                     .has("name", "Software")
                     .in("is").hasLabel("Book").<Book>result()
                     .map(Book::getName)
                     .toList();
 
-            List<String> sofwareNoSQLBooks = graph.traversalVertex().hasLabel("Category")
+            List<String> sofwareNoSQLBooks = template.traversalVertex().hasLabel("Category")
                     .has("name", "Software")
                     .in("is")
                     .has("name", "NoSQL")
@@ -76,22 +76,22 @@ public final class BookApp {
 
 
             System.out.println("\n📚 Books in 'Architecture' category:");
-            var architectureBooks = graph.gremlin("g.V().hasLabel('Category').has('name','Architecture').in('is')").toList();
+            var architectureBooks = template.gremlin("g.V().hasLabel('Category').has('name','Architecture').in('is')").toList();
             architectureBooks.forEach(doc -> System.out.println(" - " + doc));
 
             System.out.println("\n🔍 Categories with more than one book:");
-            var commonCategories = graph.gremlin("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))"
+            var commonCategories = template.gremlin("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))"
             ).toList();
             commonCategories.forEach(doc -> System.out.println(" - " + doc));
 
-            var highRelevanceBooks = graph.gremlin( "g.E().hasLabel('is').has('relevance', gte(9))" +
+            var highRelevanceBooks = template.gremlin( "g.E().hasLabel('is').has('relevance', gte(9))" +
                     ".outV().hasLabel('Book').dedup()").toList();
 
             System.out.println("\n📚 Books with high relevance:");
             highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
 
             System.out.println("\n📚 Books with name: 'Effective Java':");
-            var effectiveJavaBooks = graph.gremlin("g.V().hasLabel('Book').has('name', @name)", Collections.singletonMap("name", "Effective Java")).toList();
+            var effectiveJavaBooks = template.gremlin("g.V().hasLabel('Book').has('name', @name)", Collections.singletonMap("name", "Effective Java")).toList();
             effectiveJavaBooks.forEach(doc -> System.out.println(" - " + doc));
         }
     }
