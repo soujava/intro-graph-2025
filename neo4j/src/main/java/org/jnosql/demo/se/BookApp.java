@@ -69,7 +69,10 @@ public final class BookApp {
             System.out.println("\n📚 Books with high relevance:");
             highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
 
-
+            System.out.println("\n📚 Books with name: 'Effective Java':");
+            var effectiveJavaBooks = graph.cypher("MATCH (b:Book {name: $name}) RETURN b", Collections.singletonMap("name", "Effective Java")
+            ).toList();
+            effectiveJavaBooks.forEach(doc -> System.out.println(" - " + doc));
         }
     }
 
