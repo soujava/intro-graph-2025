@@ -4,8 +4,6 @@ package org.jnosql.demo.se;
 import jakarta.data.repository.Repository;
 import org.eclipse.jnosql.databases.neo4j.mapping.Cypher;
 import org.eclipse.jnosql.databases.neo4j.mapping.Neo4JRepository;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.Gremlin;
-import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerPopRepository;
 
 import java.util.List;
 import java.util.Optional;
