@@ -14,12 +14,12 @@ public interface BookRepository extends Neo4JRepository<Book, Long> {
 
     Optional<Book> findByName(String name);
 
-    @Cypher("g.V().hasLabel('Book').out('is').hasLabel('Category').has('name','Architecture').in('is').dedup()")
+    @Cypher("MATCH (b:Book)-[:is]->(c:Category {name: 'Architecture'}) RETURN DISTINCT b")
     List<Book> findArchitectureBooks();
 
-    @Cypher("g.E().hasLabel('is').has('relevance', gte(9)).outV().hasLabel('Book').dedup()")
+    @Cypher("MATCH (b:Book)-[r:is]->(:Category) WHERE r.relevance >= 9 RETURN DISTINCT b")
     List<Book> highRelevanceBooks();
 
-    @Cypher("g.V().hasLabel('Book').has('name', @name)")
+    @Cypher("MATCH (b:Book {name: $name}) RETURN b")
     List<Book> queryByName(@Param("name") String name);
 }
