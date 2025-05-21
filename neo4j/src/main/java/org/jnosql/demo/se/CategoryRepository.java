@@ -13,6 +13,6 @@ public interface CategoryRepository extends Neo4JRepository<Category, Long> {
 
     Optional<Category> findByName(String name);
 
-    @Cypher("g.V().hasLabel('Category').where(__.in('is').count().is(gt(1)))")
+    @Cypher("MATCH (b:Book)-[:is]->(c:Category) WITH c, count(b) AS total WHERE total > 1 RETURN c")
     List<Category> commonCategories();
 }
