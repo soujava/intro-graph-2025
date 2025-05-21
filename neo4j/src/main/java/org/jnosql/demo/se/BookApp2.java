@@ -23,7 +23,7 @@ public final class BookApp2 {
     public static void main(String[] args) {
 
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
-            GraphTemplate graph = container.select(GraphTemplate.class).get();
+            var template = container.select(GraphTemplate.class).get();
             var bookRepository = container.select(BookRepository.class).get();
             var repository = container.select(CategoryRepository.class).get();
 
@@ -37,16 +37,14 @@ public final class BookApp2 {
             var systemDesign = bookRepository.findByName("System Design Interview").orElseGet(() -> bookRepository.save(Book.of("System Design Interview")));
             var javaPerformance = bookRepository.findByName("Java Performance").orElseGet(() -> bookRepository.save(Book.of("Java Performance")));
 
-
-            graph.edge(Edge.source(effectiveJava).label("is").target(java).property("relevance", 10).build());
-            graph.edge(Edge.source(effectiveJava).label("is").target(software).property("relevance", 9).build());
-            graph.edge(Edge.source(cleanArchitecture).label("is").target(software).property("relevance", 8).build());
-            graph.edge(Edge.source(cleanArchitecture).label("is").target(architecture).property("relevance", 10).build());
-            graph.edge(Edge.source(systemDesign).label("is").target(architecture).property("relevance", 9).build());
-            graph.edge(Edge.source(systemDesign).label("is").target(software).property("relevance", 7).build());
-            graph.edge(Edge.source(javaPerformance).label("is").target(performance).property("relevance", 8).build());
-            graph.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
-
+            template.edge(Edge.source(effectiveJava).label("is").target(java).property("relevance", 10).build());
+            template.edge(Edge.source(effectiveJava).label("is").target(software).property("relevance", 9).build());
+            template.edge(Edge.source(cleanArchitecture).label("is").target(software).property("relevance", 8).build());
+            template.edge(Edge.source(cleanArchitecture).label("is").target(architecture).property("relevance", 10).build());
+            template.edge(Edge.source(systemDesign).label("is").target(architecture).property("relevance", 9).build());
+            template.edge(Edge.source(systemDesign).label("is").target(software).property("relevance", 7).build());
+            template.edge(Edge.source(javaPerformance).label("is").target(performance).property("relevance", 8).build());
+            template.edge(Edge.source(javaPerformance).label("is").target(java).property("relevance", 9).build());
 
             System.out.println("\n📚 Books in 'Architecture' category:");
             var architectureBooks = bookRepository.findArchitectureBooks();
