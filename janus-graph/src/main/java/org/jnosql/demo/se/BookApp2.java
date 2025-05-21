@@ -62,6 +62,9 @@ public final class BookApp2 {
 
             System.out.println("\n📚 Books with high relevance:");
             highRelevanceBooks.forEach(doc -> System.out.println(" - " + doc));
+
+            var bookByName = bookRepository.queryByName("Effective Java");
+            System.out.println("\n📚 Book by name: " + bookByName);
         }
     }
 }
