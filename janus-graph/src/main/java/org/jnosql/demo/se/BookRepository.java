@@ -17,10 +17,9 @@ public interface BookRepository extends TinkerPopRepository<Book, Long> {
     @Gremlin("g.V().hasLabel('Book').out('is').hasLabel('Category').has('name','Architecture').in('is')")
     List<Book> findArchitectureBooks();
 
-    @Gremlin("\"g.E().hasLabel('is').has('relevance', gte(9))\" +\n" +
-            "                    \".outV().hasLabel('Book').dedup()\"")
+    @Gremlin("g.E().hasLabel('is').has('relevance', gte(9)).outV().hasLabel('Book').dedup()")
     List<Book> highRelevanceBooks();
 
     @Gremlin("g.V().hasLabel('Book').has('name', @name)")
-    Optional<Book> queryByName(@Param("name") String name);
+    List<Book> queryByName(@Param("name") String name);
 }
