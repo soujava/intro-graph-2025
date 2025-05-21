@@ -14,6 +14,7 @@ import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
 import org.eclipse.jnosql.databases.tinkerpop.mapping.TinkerpopTemplate;
 import org.eclipse.jnosql.mapping.graph.Edge;
+import org.eclipse.jnosql.mapping.graph.GraphTemplate;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public final class BookApp2 {
     public static void main(String[] args) {
 
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
-            TinkerpopTemplate graph = container.select(TinkerpopTemplate.class).get();
+            var graph = container.select(GraphTemplate.class).get();
             var bookRepository = container.select(BookRepository.class).get();
             var repository = container.select(CategoryRepository.class).get();
 
